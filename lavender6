@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اسم موقعك</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            direction: rtl;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+        .products {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .product {
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            margin: 10px;
+            width: 200px;
+            text-align: center;
+        }
+        .product img {
+            width: 100%;
+            height: auto;
+        }
+        .product button {
+            background-color: #5c6bc0;
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            cursor: pointer;
+        }
+        .product button:hover {
+            background-color: #3949ab;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>LAVENDER HIJAB</h1>
+        <p>Your Guide To Femininty</p>
+    </header>
+
+    <div class="products">
+        <!-- هنا هنضيف المنتجات -->
+<div class="product">
+    <img src="product1.jpg" alt="منتج 1">
+    <h3>منتج 1</h3>
+    <p>السعر: 100 جنيه</p>
+    <button class="add-to-cart" data-name="منتج 1" data-price="100">أضف إلى السلة</button>
+</div>
+
+<div class="product">
+    <img src="product2.jpg" alt="منتج 2">
+    <h3>منتج 2</h3>
+    <p>السعر: 150 جنيه</p>
+    <button class="add-to-cart" data-name="منتج 2" data-price="150">أضف إلى السلة</button>
+</div>
+
+<div class="product">
+    <img src="product3.jpg" alt="منتج 3">
+    <h3>منتج 3</h3>
+    <p>السعر: 200 جنيه</p>
+    <button class="add-to-cart" data-name="منتج 3" data-price="200">أضف إلى السلة</button>
+</div>
+
+<div class="product">
+    <img src="product4.jpg" alt="منتج 4">
+    <h3>منتج 4</h3>
+    <p>السعر: 250 جنيه</p>
+    <button class="add-to-cart" data-name="منتج 4" data-price="250">أضف إلى السلة</button>
+</div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+<div id="cart">
+    <h2>سلة الشراء</h2>
+    <div id="cart-items"></div> <!-- هنا هتظهر المنتجات المضافة -->
+    <button onclick="goToCheckout()">انتقل إلى الدفع</button>
+</div>
+
+<script>
+    let cart = []; // مصفوفة لتخزين المنتجات المضافة
+
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', function() {
+            let productName = this.getAttribute('data-name');
+            let productPrice = this.getAttribute('data-price');
+
+            cart.push({ name: productName, price: productPrice });
+            updateCart();
+        });
+    });
+
+    function updateCart() {
+        let cartContainer = document.getElementById('cart-items');
+        cartContainer.innerHTML = ''; // مسح محتويات السلة القديمة
+
+        let total = 0;
+        cart.forEach(item => {
+            let productElement = document.createElement('div');
+            productElement.innerHTML = `${item.name} - ${item.price} جنيه`;
+            cartContainer.appendChild(productElement);
+            total += parseFloat(item.price);
+        });
+
+        let totalElement = document.createElement('div');
+        totalElement.innerHTML = `إجمالي: ${total} جنيه`;
+        cartContainer.appendChild(totalElement);
+    }
+
+    function goToCheckout() {
+        // إذا السلة غير فارغة، ننقل للمستخدم إلى صفحة الدفع
+        if (cart.length > 0) {
+            document.getElementById('cart').innerHTML = `
+                <h2>سلة الشراء</h2>
+                <p>تم نقلك إلى صفحة الدفع. اضغط على زر "إتمام الشراء" لإكمال العملية.</p>
+                <form id="checkout-form">
+                    <label for="name">الاسم:</label>
+                    <input type="text" id="name" name="name" required><br>
+
+                    <label for="address">العنوان:</label>
+                    <input type="text" id="address" name="address" required><br>
+
+                    <label for="phone">رقم الهاتف:</label>
+                    <input type="text" id="phone" name="phone" required><br>
+
+                    <label for="payment-method">طريقة الدفع:</label>
+                    <select id="payment-method" name="payment-method" required>
+                        <option value="cash">الدفع عند الاستلام</option>
+                        <option value="card">الدفع باستخدام البطاقة</option>
+                    </select><br>
+
+                    <button type="submit">إتمام الشراء</button>
+                </form>
+            `;
+        } else {
+            alert("سلة الشراء فارغة!");
+        }
+    }
+
+    document.getElementById('checkout-form')?.addEventListener('submit', function(e) {
+        e.preventDefault(); // منع إرسال الفورم بشكل تقليدي
+
+        alert("تمت عملية الشراء بنجاح!");
+        cart = []; // مسح السلة بعد إتمام الشراء
+        updateCart(); // تحديث السلة
+    });
+</script>
+<div id="thank-you-message" style="display: none;">
+    <h2>شكرًا لك!</h2>
+    <p>تمت عملية الشراء بنجاح. سنقوم بمعالجة طلبك قريبًا.</p>
+    <p>نتمنى لك يومًا سعيدًا!</p>
+</div>
+<footer>
+    <p>جميع الحقوق محفوظة © 2024</p>
+</footer>
